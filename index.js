@@ -4,14 +4,14 @@ const app = express();
 app.use(express.json());
 
 app.get('/oi', (req, res) => { res.send('oi'); });
-app.listen(3000, () =>   console.log('Server is running on port 3000'));
 
-//get http://localhost:3000/oi
 
-let film = [
+//get http://localhost:3000/filmes
+
+let filmes = [
     {
-        titulo: "",
-        sinopse: "",
+        titulo: "O Poderoso Chefão",
+        sinopse: "mafia.",
     },
     {
         titulo: "Titanic",
@@ -19,3 +19,18 @@ let film = [
         
     }
 ]
+
+app.get('/filmes', (req, res) => { res.json(filmes); });
+
+app.post('/filmes', (req, res) => {
+    // Captura o que o usuário enviou
+    const titulo = req.body.titulo;
+    const sinopse = req.body.sinopse;
+    // Monta o objeto filme para incluir na base de dados
+    const filme = { titulo: titulo, sinopse: sinopse };
+    // Adiciona o novo filme na base de dados
+    filmes.push(filme);
+    // Responde com o filme adicionado
+    res.status(201).json(filme);
+});
+app.listen(3000, () =>   console.log('Server is running on port 3000'));
