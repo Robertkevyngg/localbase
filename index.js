@@ -1,36 +1,43 @@
-const express = require('express');
-const app = express();
+//string de conexão com o mongo
+//mongodb+srv://usuario_mongo:a_senha@cluster0.skf8n.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
 
-app.use(express.json());
+const express = require ('express')
+const cors = require ('cors')
+const mongoose = require('mongoose')
+const app = express()
 
-app.get('/oi', (req, res) => { res.send('oi'); });
+app.use (express.json())
+app.use (cors())
 
-
-//get http://localhost:3000/filmes
+//get http://localhost:3000/oi
+app.get('/oi', (req, res) => {
+    res.send('oi')
+})
 
 let filmes = [
     {
-        titulo: "O Poderoso Chefão",
-        sinopse: "mafia.",
+        titulo: "Divertidamente",
+        sinopse: "Com a mudança para uma nova cidade, as emoções de Riley, que tem apenas 11 anos de idade, ficam extremamente agitadas. Uma confusão na sala de controle do seu cérebro deixa a Alegria e a Tristeza de fora, afetando a vida de Riley radicalmente."
     },
     {
-        titulo: "Titanic",
-        sinopse: "O Titanic é um navio de passageiros que colidiu com um iceberg no Ocean Indiano na madrugada do dia 15 de abril de 1912, causando a morte de mais de 1,5 million de pessoas.",
-        
+        titulo: "Oppenheimer",
+        sinopse: "O físico J. Robert Oppenheimer trabalha com uma equipe de cientistas durante o Projeto Manhattan, levando ao desenvolvimento da bomba atômica."
     }
-]
+] 
+app.get("/filmes", (req, res) => {
+    res.json(filmes)
+})
 
-app.get('/filmes', (req, res) => { res.json(filmes); });
+app.post("/filmes", (req, res) => {
+    //captura o que o usuário enviou
+    const titulo = req.body.titulo
+    const sinopse = req.body.sinopse
+    //monta o objeto filme para incluir na base
+    const filme = {titulo: titulo, sinopse: sinopse}
+    //adiciona o o novo filme à lista de filmes
+    filmes.push(filme)
+    //mostra a base atualizada
+    res.json(filmes)
+})
 
-app.post('/filmes', (req, res) => {
-    // Captura o que o usuário enviou
-    const titulo = req.body.titulo;
-    const sinopse = req.body.sinopse;
-    // Monta o objeto filme para incluir na base de dados
-    const filme = { titulo: titulo, sinopse: sinopse };
-    // Adiciona o novo filme na base de dados
-    filmes.push(filme);
-    // Responde com o filme adicionado
-    res.status(201).json(filme);
-});
-app.listen(3000, () =>   console.log('Server is running on port 3000'));
+app.listen(3000, () => console.log("up and running"))
